@@ -1,0 +1,1 @@
+Learn Django by examples.
