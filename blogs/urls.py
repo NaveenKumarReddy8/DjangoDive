@@ -2,7 +2,8 @@ from django.urls import path
 
 from blogs.views import post_detail, post_list
 
+app_name = "blogs"
 urlpatterns = [
-    path("", post_list, name="postlist"),
-    path("post_details/<int:pkid>", post_detail, name="postdetails"),
+    path("", post_list, name="post_list"),
+    path("<int:pkid>", post_detail, name="post_details"),
 ]
