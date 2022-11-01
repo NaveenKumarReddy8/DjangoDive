@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils import timezone
 from django.urls import reverse
+from django.utils import timezone
 
 # Create your models here.
 
@@ -32,4 +32,4 @@ class Post(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse(viewname="blogs:post_details", args=(self.id, ))
+        return reverse(viewname="blogs:post_details", args=(self.id,))

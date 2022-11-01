@@ -13,8 +13,8 @@ def post_list(request: HttpRequest):
     )
 
 
-def post_detail(request: HttpRequest, pkid: int):
-    post = get_object_or_404(Post, id=pkid, status=Post.Status.PUBLISHED)
+def post_detail(request: HttpRequest, pk: int):
+    post = get_object_or_404(Post, id=pk)
     return render(
         request=request, template_name="blogs/post/detail.xhtml", context={"post": post}
     )
