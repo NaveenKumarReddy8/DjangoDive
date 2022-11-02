@@ -1,4 +1,4 @@
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 
 from blogs.models import Post
