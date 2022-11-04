@@ -1,5 +1,6 @@
 from django.http import HttpRequest
 from django.shortcuts import get_list_or_404, get_object_or_404, render
+from django.core.paginator import Paginator
 
 from blogs.models import Post
 
@@ -7,7 +8,10 @@ from blogs.models import Post
 
 
 def post_list(request: HttpRequest):
-    posts = get_list_or_404(Post)
+    post_list = get_list_or_404(Post)
+    paginator = Paginator(post_list, 1)
+    page_number = request.GET.get("page", default=1)
+    posts = paginator.page(page_number)
     return render(
         request=request, template_name="blogs/post/list.xhtml", context={"posts": posts}
     )
