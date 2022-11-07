@@ -1,12 +1,13 @@
 from typing import Optional
 
+from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpRequest
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.views.generic import ListView
 
-from blogs.models import Post
 from blogs.forms import EmailPostForm
+from blogs.models import Post
 
 # Create your views here.
 
@@ -42,12 +43,29 @@ def post_detail(request: HttpRequest, year: int, month: int, day: int, post: str
         request=request, template_name="blogs/post/detail.xhtml", context={"post": post}
     )
 
+
 def post_share(request: HttpRequest, post_id: int):
     post = get_object_or_404(Post, id=post_id)
+    sent = False
     if request.method == "POST":
         form: EmailPostForm = EmailPostForm(request.POST)
         if form.is_valid():
             cleaned_data = form.cleaned_data
+            post_url = request.build_absolute_uri(post.get_absolute_url())
+            subject = f"{cleaned_data['name']} recommends you read {post.title}"
+            message = f"Read {post.title} at {post_url}\n\n{cleaned_data['name']}'s comments: {cleaned_data['comments']}"
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email="mr.naveen8@gmail.com",
+                recipient_list=[cleaned_data["to"]],
+                fail_silently=False,
+            )
+            sent = True
     else:
         form = EmailPostForm()
-    return render(request=request, template_name="blogs/post/share.xhtml", context={"post": post, "form": form})
+    return render(
+        request=request,
+        template_name="blogs/post/share.xhtml",
+        context={"post": post, "form": form, "sent": sent},
+    )
