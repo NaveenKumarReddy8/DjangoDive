@@ -6,7 +6,15 @@ from django.utils import timezone
 # Create your models here.
 
 
-class Post(models.Model):
+class Generic(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Post(Generic):
     class Status(models.TextChoices):
         DRAFT = ("DF", "Draft")
         PUBLISHED = ("pb", "Published")
@@ -18,8 +26,6 @@ class Post(models.Model):
     )
     body = models.TextField()
     publish = models.DateTimeField(default=timezone.now)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
     status = models.CharField(
         max_length=2, choices=Status.choices, default=Status.DRAFT
     )
@@ -36,3 +42,18 @@ class Post(models.Model):
             viewname="blogs:post_details",
             args=(self.publish.year, self.publish.month, self.publish.day, self.slug),
         )
+
+
+class Comment(Generic):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+    name = models.CharField(max_length=80)
+    email = models.EmailField()
+    body = models.TextField()
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["created"]
+        indexes = [models.Index(fields=["created"])]
+
+    def __str__(self):
+        return f"Comment by {self.name} on {self.post}"
