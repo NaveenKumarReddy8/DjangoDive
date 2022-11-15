@@ -4,12 +4,29 @@ from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpRequest
 from django.shortcuts import get_list_or_404, get_object_or_404, render
+from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 
-from blogs.forms import EmailPostForm
+from blogs.forms import CommentForm, EmailPostForm
 from blogs.models import Post
 
 # Create your views here.
+
+
+@require_POST
+def post_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    comment = None
+    form = CommentForm(data=request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post = post
+        comment.save()
+    return render(
+        request=request,
+        template_name="blogs/post/comment.xhtml",
+        context={"post": post, "form": form, "comment": comment},
+    )
 
 
 class PostListView(ListView):
@@ -39,8 +56,12 @@ def post_detail(request: HttpRequest, year: int, month: int, day: int, post: str
     post = get_object_or_404(
         Post, publish__year=year, publish__month=month, publish__day=day, slug=post
     )
+    comments = post.comments.filter(active=True)
+    form = CommentForm()
     return render(
-        request=request, template_name="blogs/post/detail.xhtml", context={"post": post}
+        request=request,
+        template_name="blogs/post/detail.xhtml",
+        context={"post": post, "comments": comments, "form": form},
     )
 
 
@@ -48,7 +69,6 @@ def post_share(request: HttpRequest, post_id: int):
     post = get_object_or_404(Post, id=post_id)
     sent: bool = False
     if request.method == "POST":
-        breakpoint()
         form: EmailPostForm = EmailPostForm(request.POST)
         if form.is_valid():
             cleaned_data: dict = form.cleaned_data
