@@ -19,7 +19,7 @@ class Post(Generic):
     class Status(models.TextChoices):
         DRAFT = ("DF", "Draft")
         PUBLISHED = ("pb", "Published")
-    
+
     tags = TaggableManager()
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique_for_date="publish")

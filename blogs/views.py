@@ -54,7 +54,9 @@ def post_list(request: HttpRequest, tag_slug=None):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     return render(
-        request=request, template_name="blogs/post/list.xhtml", context={"posts": posts, "tag": tag}
+        request=request,
+        template_name="blogs/post/list.xhtml",
+        context={"posts": posts, "tag": tag},
     )
 
 
