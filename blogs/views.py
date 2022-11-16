@@ -8,6 +8,7 @@ from django.http import HttpRequest
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
+from taggit.models import Tag
 
 from blogs.forms import CommentForm, EmailPostForm
 from blogs.models import Post
@@ -38,9 +39,12 @@ class PostListView(ListView):
     paginate_by: int = 3
 
 
-# This view function is replaced by class based View PostListView.
-def post_list(request: HttpRequest):
+def post_list(request: HttpRequest, tag_slug=None):
     post_list = get_list_or_404(Post)
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        post_list = post_list.filter(tags__in=[tag])
     paginator = Paginator(post_list, 1)
     page_number = request.GET.get("page", default=1)
     try:
@@ -50,7 +54,7 @@ def post_list(request: HttpRequest):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     return render(
-        request=request, template_name="blogs/post/list.xhtml", context={"posts": posts}
+        request=request, template_name="blogs/post/list.xhtml", context={"posts": posts, "tag": tag}
     )
 
 

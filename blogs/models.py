@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from taggit.managers import TaggableManager
 
 # Create your models here.
 
@@ -18,7 +19,8 @@ class Post(Generic):
     class Status(models.TextChoices):
         DRAFT = ("DF", "Draft")
         PUBLISHED = ("pb", "Published")
-
+    
+    tags = TaggableManager()
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique_for_date="publish")
     author = models.ForeignKey(
