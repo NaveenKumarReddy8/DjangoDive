@@ -40,7 +40,7 @@ class PostListView(ListView):
 
 
 def post_list(request: HttpRequest, tag_slug=None):
-    post_list = get_list_or_404(Post)
+    post_list = Post.objects.all()
     tag = None
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
