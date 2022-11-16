@@ -1,3 +1,5 @@
+"""View layer for blogs."""
+
 from typing import Optional
 
 from django.core.mail import send_mail
