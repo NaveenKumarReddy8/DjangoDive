@@ -8,6 +8,7 @@ from django.http import HttpRequest
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
+from django.db.models import Count
 from taggit.models import Tag
 
 from blogs.forms import CommentForm, EmailPostForm
@@ -66,10 +67,13 @@ def post_detail(request: HttpRequest, year: int, month: int, day: int, post: str
     )
     comments = post.comments.filter(active=True)
     form = CommentForm()
+    post_tags_id = post.tags.values_list("id", flat=True)
+    similar_posts = Post.objects.filter(tag__in=post_tags_id).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by("-same_tags", "-publish")[:4]
     return render(
         request=request,
         template_name="blogs/post/detail.xhtml",
-        context={"post": post, "comments": comments, "form": form},
+        context={"post": post, "comments": comments, "form": form, "similar_posts": similar_posts},
     )
 
 
