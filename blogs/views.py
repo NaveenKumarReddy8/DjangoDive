@@ -2,6 +2,7 @@
 
 from typing import Optional
 
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
@@ -11,7 +12,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 from taggit.models import Tag
 
-from blogs.forms import CommentForm, EmailPostForm
+from blogs.forms import CommentForm, EmailPostForm, SearchForm
 from blogs.models import Post
 
 # Create your views here.
@@ -108,4 +109,31 @@ def post_share(request: HttpRequest, post_id: int):
         request=request,
         template_name="blogs/post/share.xhtml",
         context={"post": post, "form": form, "sent": sent},
+    )
+
+
+def post_search(request: HttpRequest):
+    form = SearchForm()
+    query = None
+    results = []
+    if "query" in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data["query"]
+            search_vector = SearchVector("title", weight="A") + SearchVector(
+                "body", weight="B"
+            )
+            search_query = SearchQuery(query)
+            results = (
+                Post.objects.all()
+                .annotate(
+                    search=search_vector, rank=SearchRank(search_vector, search_query)
+                )
+                .filter(rank__gte=0.1)
+                .order_by("-rank")
+            )
+    return render(
+        request=request,
+        template_name="blogs/post/search.xhtml",
+        context={"form": form, "query": query, "results": results},
     )
