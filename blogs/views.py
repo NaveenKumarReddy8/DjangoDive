@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
 from django.http import HttpRequest
-from django.shortcuts import get_list_or_404, get_object_or_404, render
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 from taggit.models import Tag

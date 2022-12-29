@@ -81,11 +81,8 @@ WSGI_APPLICATION = "djangodive.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": "localhost",
-        "NAME": "blogs",
-        "USER": "naveen",
-        "PASSWORD": "************",
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
