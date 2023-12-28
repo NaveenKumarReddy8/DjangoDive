@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "djangodive"
+version = "0.1.0"
+description = ""
+authors = ["Naveen Kumar Reddy Pemmana <mr.naveen8@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.0"
+
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.13.2"
+black = "^23.12.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
