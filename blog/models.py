@@ -27,5 +27,5 @@ class Post(models.Model):
         ordering = ("-publish",)
         indexes = (models.Index(fields=("-publish",)),)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
