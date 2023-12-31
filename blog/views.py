@@ -9,12 +9,12 @@ from blog.models import Post
 def post_list(request: HttpRequest):
     posts = Post.published.all()
     return render(
-        request=request, template_name="blog/post/list.xhtml", context={"posts": posts}
+        request=request, template_name="blog/post/list.html", context={"posts": posts}
     )
 
 
 def post_detail(request: HttpRequest, pk: int):
     post = get_object_or_404(klass=Post, id=pk, status=Post.Status.PUBLISH)
     return render(
-        request=request, template_name="blog/post/detail.xhtml", context={"post": post}
+        request=request, template_name="blog/post/detail.html", context={"post": post}
     )
