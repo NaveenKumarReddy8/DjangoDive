@@ -59,9 +59,7 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ("created",)
-        indexes = (
-            models.Index(fields=("created",)),
-        )
-    
+        indexes = (models.Index(fields=("created",)),)
+
     def __str__(self) -> str:
         return f"Comment by {self.name} on {self.post}"
