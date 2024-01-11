@@ -42,8 +42,12 @@ def post_detail(request: HttpRequest, year: int, month: int, day: int, post: str
         slug=post,
         status=Post.Status.PUBLISH,
     )
+    comments = post.comments.filter(active=True)
+    form = CommentForm()
     return render(
-        request=request, template_name="blog/post/detail.html", context={"post": post}
+        request=request,
+        template_name="blog/post/detail.html",
+        context={"post": post, "comments": comments, "form": form},
     )
 
 
