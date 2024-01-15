@@ -148,6 +148,20 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-taggit"
+version = "5.0.1"
+description = "django-taggit is a reusable Django application for simple tagging."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django-taggit-5.0.1.tar.gz", hash = "sha256:edcd7db1e0f35c304e082a2f631ddac2e16ef5296029524eb792af7430cab4cc"},
+    {file = "django_taggit-5.0.1-py3-none-any.whl", hash = "sha256:a0ca8a28b03c4b26c2630fd762cb76ec39b5e41abf727a7b66f897a625c5e647"},
+]
+
+[package.dependencies]
+Django = ">=4.1"
+
+[[package]]
 name = "djlint"
 version = "1.34.1"
 description = "HTML Template Linter and Formatter"
@@ -716,4 +730,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "d53a2c875db86ac7cf8dba49ac9694c5e447c2e3955b09dd0a6a2b993e29b96c"
+content-hash = "3a6b9b55966fbfdf4a097fc4837af9472670e323c545b3a76df568a8546aae0a"
