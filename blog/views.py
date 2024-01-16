@@ -4,6 +4,7 @@ from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
+from taggit.models import Tag
 
 from blog.forms import CommentForm, EmailPostForm
 from blog.models import Post
@@ -11,8 +12,12 @@ from blog.models import Post
 # Create your views here.
 
 
-def post_list(request: HttpRequest):
+def post_list(request: HttpRequest, tag_slug: str = None):
     post_list = Post.published.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(klass=Tag, slug=tag_slug)
+        post_list = post_list.filter(tags__in=(tag,))
     paginator = Paginator(object_list=post_list, per_page=3)
     page_number = request.GET.get("page", default=1)
     try:
@@ -22,7 +27,9 @@ def post_list(request: HttpRequest):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     return render(
-        request=request, template_name="blog/post/list.html", context={"posts": posts}
+        request=request,
+        template_name="blog/post/list.html",
+        context={"posts": posts, "tag": tag},
     )
 
 
