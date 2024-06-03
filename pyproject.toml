@@ -15,7 +15,7 @@ django = "^5.0.3"
 [tool.poetry.group.dev.dependencies]
 isort = "^5.13.2"
 black = "^24.2.0"
-ipython = "^8.22.2"
+ipython = "^8.25.0"
 django-taggit = "^5.0.1"
 
 [tool.djlint]
