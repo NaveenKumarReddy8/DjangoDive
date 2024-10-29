@@ -1,100 +1,26 @@
-from django.core.mail import send_mail
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpRequest
-from django.shortcuts import get_object_or_404, render
-from django.views.decorators.http import require_POST
-from django.views.generic import ListView
-from taggit.models import Tag
+from django.core.paginator import Paginator
 
-from blog.forms import CommentForm, EmailPostForm
 from blog.models import Post
 
 # Create your views here.
 
 
-def post_list(request: HttpRequest, tag_slug: str = None):
-    post_list = Post.published.all()
-    tag = None
-    if tag_slug:
-        tag = get_object_or_404(klass=Tag, slug=tag_slug)
-        post_list = post_list.filter(tags__in=(tag,))
-    paginator = Paginator(object_list=post_list, per_page=3)
+def post_list(request: HttpRequest):
+    posts = Post.published.all()
+    paginator = Paginator(posts, per_page=3)
     page_number = request.GET.get("page", default=1)
-    try:
-        posts = paginator.page(page_number)
-    except PageNotAnInteger:
-        posts = paginator.page(1)
-    except EmptyPage:
-        posts = paginator.page(paginator.num_pages)
-    return render(
-        request=request,
-        template_name="blog/post/list.html",
-        context={"posts": posts, "tag": tag},
-    )
-
-
-class PostListView(ListView):
-    model = Post
-    paginate_by = 3
-    context_object_name = "posts"
-    template_name = "blog/post/list.html"
+    posts = paginator.page(page_number)
+    return render(request=request, template_name="blog/post/list.html", context={"posts": posts})
 
 
 def post_detail(request: HttpRequest, year: int, month: int, day: int, post: str):
     post = get_object_or_404(
-        klass=Post,
-        publish__year=year,
-        publish__month=month,
-        publish__day=day,
-        slug=post,
-        status=Post.Status.PUBLISH,
+        Post, publish__year=year, publish__month=month, publish__day=day, slug=post, status=Post.Status.PUBLISHED
     )
-    comments = post.comments.filter(active=True)
-    form = CommentForm()
     return render(
         request=request,
         template_name="blog/post/detail.html",
-        context={"post": post, "comments": comments, "form": form},
-    )
-
-
-def post_share(request: HttpRequest, post_id: int):
-    post = get_object_or_404(klass=Post, id=post_id, status=Post.Status.PUBLISH)
-    sent = False
-    if request.method == "POST":
-        form = EmailPostForm(data=request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            post_url = request.build_absolute_uri(post.get_absolute_url())
-            subject = f"{cd['name']} recommends you read {post.title}"
-            message = f"Read {post.title} at {post_url} \n\n {cd['name']}'s comments: {cd['comments']}"
-            send_mail(
-                subject=subject,
-                message=message,
-                from_email=cd["email"],
-                recipient_list=(cd["to"],),
-            )
-            sent = True
-    else:
-        form = EmailPostForm()
-    return render(
-        request=request,
-        template_name="blog/post/share.html",
-        context={"post": post, "form": form, "sent": sent},
-    )
-
-
-@require_POST
-def post_comment(request: HttpRequest, post_id: int):
-    post = get_object_or_404(klass=Post, id=post_id, status=Post.Status.PUBLISH)
-    comment = None
-    form = CommentForm(request.POST)
-    if form.is_valid():
-        comment = form.save(commit=False)
-        comment.post = post
-        comment.save()
-    return render(
-        request=request,
-        template_name="blog/post/comment.html",
-        context={"form": form, "post": post, "comment": comment},
+        context={"post": post},
     )
