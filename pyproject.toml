@@ -9,6 +9,8 @@ readme = "README.md"
 python = "^3.12"
 django = "^5.1.2"
 django-taggit = "^6.1.0"
+markdown = "^3.7"
+psycopg = "^3.2.3"
 
 
 [tool.poetry.group.dev.dependencies]
