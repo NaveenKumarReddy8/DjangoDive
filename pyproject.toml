@@ -12,3 +12,13 @@ dependencies = [
 dev = [
     "ruff>=0.9.9",
 ]
+
+[tool.ruff]
+indent-width = 4
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+extend-select = [
+    "I"
+]
