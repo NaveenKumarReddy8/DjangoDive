@@ -24,6 +24,11 @@
         # Open editors for the following files by default, if they exist:
         default.openFiles = ["README.md"];
       };
+      onStart = {
+        install-dependencies = ''
+          uv sync --all-groups
+        '';
+      };
       # To run something each time the workspace is (re)started, use the `onStart` hook
     };
     # Enable previews and customize configuration
