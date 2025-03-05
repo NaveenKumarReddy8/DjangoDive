@@ -13,6 +13,7 @@
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
       "ms-python.python"
+      "batisteo.vscode-django"
     ];
     workspace = {
       # Runs when a workspace is first created with this `dev.nix` file
