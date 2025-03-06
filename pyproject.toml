@@ -10,6 +10,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "djlint>=1.36.4",
     "ipython>=9.0.1",
     "ruff>=0.9.9",
 ]
@@ -23,3 +24,6 @@ target-version = "py313"
 extend-select = [
     "I"
 ]
+
+[tool.djlint]
+profile="django"

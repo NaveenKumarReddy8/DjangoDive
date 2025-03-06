@@ -6,6 +6,7 @@
   # Use https://search.nixos.org/packages to find packages
   packages = [
     pkgs.python313
+    pkgs.gnumake
   ];
   # Sets environment variables in the workspace
   env = {};
