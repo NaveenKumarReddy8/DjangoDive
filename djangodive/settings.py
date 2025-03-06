@@ -25,8 +25,9 @@ SECRET_KEY = "django-insecure-nxovl72ar1^j2cedo$hw18n(n)5$hk2&6#^h%8vy7#9)2ko1fh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
+CSRF_TRUSTED_ORIGINS = ["https://*.cloudworkstations.dev"]
 
 # Application definition
 

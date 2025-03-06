@@ -14,6 +14,7 @@
     extensions = [
       "ms-python.python"
       "batisteo.vscode-django"
+      "ms-python.debugpy"
     ];
     workspace = {
       # Runs when a workspace is first created with this `dev.nix` file
