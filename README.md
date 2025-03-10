@@ -38,3 +38,11 @@ QuerySets are only evaluated in the following cases:
 * When you call repr() or len() on them
 * When you explicitly call list() on them
 * When you test them in a statement, such as bool(), or, and, or if
+
+### Django template dot notation lookup
+
+Technically, when the template system encounters a dot, it tries the following lookups, in this order:
+
+* Dictionary lookup
+* Attribute or method lookup
+* Numeric index lookup
