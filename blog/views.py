@@ -3,6 +3,7 @@ from django.http.request import HttpRequest
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
+from django.views.decorators.http import require_POST
 
 
 from blog.models import Post
@@ -55,3 +56,8 @@ def post_share(request: HttpRequest, post_id: int):
         template_name="blog/post/share.html",
         context={"post": post, "form": form, "sent": sent},
     )
+
+
+@require_POST
+def post_comment(request: HttpRequest, post_id: int):
+    post = get_object_or_404(klass=Post, id=post_id, status=Post.Status.PUBLISHED)
