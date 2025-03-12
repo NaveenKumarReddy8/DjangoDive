@@ -9,4 +9,8 @@
     <p>
         <a href="{% url "blog:post_share" post.id %}">Share this post.</a>
     </p>
+    <p>
+        <a href="{% url "blog:post_comment" post.id %}">Add a Comment</a>
+    </p>
+    {% for comment in post.comments %}{% endfor %}
 {% endblock content %}

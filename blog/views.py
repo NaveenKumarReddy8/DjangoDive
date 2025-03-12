@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 
 
 from blog.models import Post
-from blog.forms import EmailPostForm
+from blog.forms import EmailPostForm, CommentForm
 
 # Create your views here.
 
@@ -61,3 +61,14 @@ def post_share(request: HttpRequest, post_id: int):
 @require_POST
 def post_comment(request: HttpRequest, post_id: int):
     post = get_object_or_404(klass=Post, id=post_id, status=Post.Status.PUBLISHED)
+    comment = None
+    form = CommentForm(data=request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post = post
+        comment.save()
+    return render(
+        request=request,
+        template_name="blog/post/comment.html",
+        context={"post": post, "form": form, "comment": comment},
+    )
