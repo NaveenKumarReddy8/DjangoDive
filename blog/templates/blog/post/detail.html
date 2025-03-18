@@ -12,5 +12,12 @@
     <p>
         <a href="{% url "blog:post_comment" post.id %}">Add a Comment</a>
     </p>
-    {% for comment in post.comments %}{% endfor %}
+    {% for comment in post.comments %}
+    <div class="comment">
+        
+    </div>
+    {% empty %}
+    <p>There are no comments yet.</p>
+    {% endfor %}
+
 {% endblock content %}
