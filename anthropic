@@ -1,4 +1,5 @@
 import os
+import boto3
 from anthropic import AnthropicBedrock
 from anthropic.types import MessageParam
 
@@ -6,20 +7,54 @@ class ClaudeAgent:
     def __init__(
         self, 
         model_id="claude-3-sonnet-20240229",
-        inference_profile=None
+        inference_profile=None,
+        role_arn=None,
+        session_name="ClaudeAgentSession",
+        region=None,
+        duration_seconds=3600
     ):
         """
         Initialize the Claude Agent using Anthropic's library with AWS Bedrock
+        using STS credentials
         
         Args:
             model_id: The Claude model ID (not the full AWS Bedrock ARN)
             inference_profile: Optional name of the AWS Bedrock inference profile to use
+            role_arn: ARN of the role to assume (if None, will use default credentials)
+            session_name: Name for the assumed role session
+            region: AWS region to use
+            duration_seconds: Duration for temporary credentials
         """
-        # Initialize Anthropic client with AWS Bedrock
-        self.client = AnthropicBedrock(
-            # AWS credentials are automatically loaded from environment or config
-            aws_region=os.environ.get("AWS_REGION", "us-east-1")
-        )
+        # Set AWS region
+        self.region = region or os.environ.get("AWS_REGION", "us-east-1")
+        
+        # Get STS credentials if role_arn is provided
+        if role_arn:
+            # Create STS client
+            sts_client = boto3.client('sts', region_name=self.region)
+            
+            # Assume role
+            assumed_role = sts_client.assume_role(
+                RoleArn=role_arn,
+                RoleSessionName=session_name,
+                DurationSeconds=duration_seconds
+            )
+            
+            # Extract credentials
+            credentials = assumed_role['Credentials']
+            
+            # Initialize Anthropic client with AWS Bedrock using STS credentials
+            self.client = AnthropicBedrock(
+                aws_access_key=credentials['AccessKeyId'],
+                aws_secret_key=credentials['SecretAccessKey'],
+                aws_session_token=credentials['SessionToken'],
+                aws_region=self.region
+            )
+        else:
+            # Initialize Anthropic client with default credentials
+            self.client = AnthropicBedrock(
+                aws_region=self.region
+            )
         
         # Store model ID and inference profile
         self.model_id = model_id
@@ -70,15 +105,19 @@ class ClaudeAgent:
             request_params["aws_inference_profile"] = self.inference_profile
         
         # Invoke model using Anthropic client
-        response = self.client.messages.create(**request_params)
-        
-        # Extract response text
-        assistant_message = response.content[0].text
-        
-        # Add assistant response to history
-        self.add_to_history("assistant", assistant_message)
-        
-        return assistant_message
+        try:
+            response = self.client.messages.create(**request_params)
+            
+            # Extract response text
+            assistant_message = response.content[0].text
+            
+            # Add assistant response to history
+            self.add_to_history("assistant", assistant_message)
+            
+            return assistant_message
+            
+        except Exception as e:
+            return f"Error invoking model: {str(e)}"
     
     def reset_conversation(self):
         """Reset the conversation history"""
@@ -100,9 +139,14 @@ class ClaudeAgent:
 
 # Example usage
 def main():
-    # Create the agent with an optional inference profile
+    # Create the agent with STS credentials
     agent = ClaudeAgent(
-        inference_profile="my-bedrock-inference-profile"  # Replace with your profile name or remove
+        model_id="claude-3-sonnet-20240229",
+        inference_profile="my-bedrock-inference-profile",  # Optional
+        role_arn="arn:aws:iam::123456789012:role/BedrockAccessRole",  # Replace with your role ARN
+        session_name="ClaudeAgentDemo",
+        region="us-east-1",
+        duration_seconds=3600
     )
     
     # Define system prompt
