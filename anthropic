@@ -1,0 +1,130 @@
+import os
+from anthropic import AnthropicBedrock
+from anthropic.types import MessageParam
+
+class ClaudeAgent:
+    def __init__(
+        self, 
+        model_id="claude-3-sonnet-20240229",
+        inference_profile=None
+    ):
+        """
+        Initialize the Claude Agent using Anthropic's library with AWS Bedrock
+        
+        Args:
+            model_id: The Claude model ID (not the full AWS Bedrock ARN)
+            inference_profile: Optional name of the AWS Bedrock inference profile to use
+        """
+        # Initialize Anthropic client with AWS Bedrock
+        self.client = AnthropicBedrock(
+            # AWS credentials are automatically loaded from environment or config
+            aws_region=os.environ.get("AWS_REGION", "us-east-1")
+        )
+        
+        # Store model ID and inference profile
+        self.model_id = model_id
+        self.inference_profile = inference_profile
+        
+        # Initialize conversation history
+        self.conversation_history = []
+    
+    def add_to_history(self, role, content):
+        """Add a message to conversation history"""
+        self.conversation_history.append({"role": role, "content": content})
+    
+    def invoke_model(self, prompt, system_prompt=None, max_tokens=1000, temperature=0.7):
+        """
+        Invoke Claude model through Anthropic's AWS Bedrock integration
+        
+        Args:
+            prompt: User message
+            system_prompt: Optional system instructions
+            max_tokens: Maximum number of tokens in the response
+            temperature: Controls randomness (0-1)
+            
+        Returns:
+            The model's response text
+        """
+        # Add user message to history
+        self.add_to_history("user", prompt)
+        
+        # Prepare messages from history
+        messages = []
+        for msg in self.conversation_history:
+            messages.append(MessageParam(role=msg["role"], content=msg["content"]))
+        
+        # Prepare request parameters
+        request_params = {
+            "model": self.model_id,
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+            "messages": messages
+        }
+        
+        # Add system prompt if provided
+        if system_prompt:
+            request_params["system"] = system_prompt
+            
+        # Add inference profile if specified
+        if self.inference_profile:
+            request_params["aws_inference_profile"] = self.inference_profile
+        
+        # Invoke model using Anthropic client
+        response = self.client.messages.create(**request_params)
+        
+        # Extract response text
+        assistant_message = response.content[0].text
+        
+        # Add assistant response to history
+        self.add_to_history("assistant", assistant_message)
+        
+        return assistant_message
+    
+    def reset_conversation(self):
+        """Reset the conversation history"""
+        self.conversation_history = []
+        
+    def interact(self, user_input, system_prompt=None):
+        """
+        Handle a single interaction with the user
+        
+        Args:
+            user_input: The user's message
+            system_prompt: Optional system instructions
+            
+        Returns:
+            The agent's response
+        """
+        return self.invoke_model(user_input, system_prompt)
+
+
+# Example usage
+def main():
+    # Create the agent with an optional inference profile
+    agent = ClaudeAgent(
+        inference_profile="my-bedrock-inference-profile"  # Replace with your profile name or remove
+    )
+    
+    # Define system prompt
+    system_prompt = """
+    You are a helpful AI assistant that helps users with their questions.
+    Be concise, friendly, and informative in your responses.
+    """
+    
+    print("Claude Agent initialized. Type 'exit' to quit.")
+    
+    # Main interaction loop
+    while True:
+        user_input = input("\nYou: ")
+        
+        if user_input.lower() in ["exit", "quit", "bye"]:
+            print("Goodbye!")
+            break
+        
+        # Get response from Claude
+        response = agent.interact(user_input, system_prompt)
+        print(f"\nClaude: {response}")
+
+
+if __name__ == "__main__":
+    main()
