@@ -1,174 +1,100 @@
-import os
-import boto3
-from anthropic import AnthropicBedrock
-from anthropic.types import MessageParam
+# basic import 
+from mcp.server.fastmcp import FastMCP
+import math
 
-class ClaudeAgent:
-    def __init__(
-        self, 
-        model_id="claude-3-sonnet-20240229",
-        inference_profile=None,
-        role_arn=None,
-        session_name="ClaudeAgentSession",
-        region=None,
-        duration_seconds=3600
-    ):
-        """
-        Initialize the Claude Agent using Anthropic's library with AWS Bedrock
-        using STS credentials
-        
-        Args:
-            model_id: The Claude model ID (not the full AWS Bedrock ARN)
-            inference_profile: Optional name of the AWS Bedrock inference profile to use
-            role_arn: ARN of the role to assume (if None, will use default credentials)
-            session_name: Name for the assumed role session
-            region: AWS region to use
-            duration_seconds: Duration for temporary credentials
-        """
-        # Set AWS region
-        self.region = region or os.environ.get("AWS_REGION", "us-east-1")
-        
-        # Get STS credentials if role_arn is provided
-        if role_arn:
-            # Create STS client
-            sts_client = boto3.client('sts', region_name=self.region)
-            
-            # Assume role
-            assumed_role = sts_client.assume_role(
-                RoleArn=role_arn,
-                RoleSessionName=session_name,
-                DurationSeconds=duration_seconds
-            )
-            
-            # Extract credentials
-            credentials = assumed_role['Credentials']
-            
-            # Initialize Anthropic client with AWS Bedrock using STS credentials
-            self.client = AnthropicBedrock(
-                aws_access_key=credentials['AccessKeyId'],
-                aws_secret_key=credentials['SecretAccessKey'],
-                aws_session_token=credentials['SessionToken'],
-                aws_region=self.region
-            )
-        else:
-            # Initialize Anthropic client with default credentials
-            self.client = AnthropicBedrock(
-                aws_region=self.region
-            )
-        
-        # Store model ID and inference profile
-        self.model_id = model_id
-        self.inference_profile = inference_profile
-        
-        # Initialize conversation history
-        self.conversation_history = []
-    
-    def add_to_history(self, role, content):
-        """Add a message to conversation history"""
-        self.conversation_history.append({"role": role, "content": content})
-    
-    def invoke_model(self, prompt, system_prompt=None, max_tokens=1000, temperature=0.7):
-        """
-        Invoke Claude model through Anthropic's AWS Bedrock integration
-        
-        Args:
-            prompt: User message
-            system_prompt: Optional system instructions
-            max_tokens: Maximum number of tokens in the response
-            temperature: Controls randomness (0-1)
-            
-        Returns:
-            The model's response text
-        """
-        # Add user message to history
-        self.add_to_history("user", prompt)
-        
-        # Prepare messages from history
-        messages = []
-        for msg in self.conversation_history:
-            messages.append(MessageParam(role=msg["role"], content=msg["content"]))
-        
-        # Prepare request parameters
-        request_params = {
-            "model": self.model_id,
-            "max_tokens": max_tokens,
-            "temperature": temperature,
-            "messages": messages
-        }
-        
-        # Add system prompt if provided
-        if system_prompt:
-            request_params["system"] = system_prompt
-            
-        # Add inference profile if specified
-        if self.inference_profile:
-            request_params["aws_inference_profile"] = self.inference_profile
-        
-        # Invoke model using Anthropic client
-        try:
-            response = self.client.messages.create(**request_params)
-            
-            # Extract response text
-            assistant_message = response.content[0].text
-            
-            # Add assistant response to history
-            self.add_to_history("assistant", assistant_message)
-            
-            return assistant_message
-            
-        except Exception as e:
-            return f"Error invoking model: {str(e)}"
-    
-    def reset_conversation(self):
-        """Reset the conversation history"""
-        self.conversation_history = []
-        
-    def interact(self, user_input, system_prompt=None):
-        """
-        Handle a single interaction with the user
-        
-        Args:
-            user_input: The user's message
-            system_prompt: Optional system instructions
-            
-        Returns:
-            The agent's response
-        """
-        return self.invoke_model(user_input, system_prompt)
+# instantiate an MCP server client
+mcp = FastMCP("Hello World")
 
+# DEFINE TOOLS
 
-# Example usage
-def main():
-    # Create the agent with STS credentials
-    agent = ClaudeAgent(
-        model_id="claude-3-sonnet-20240229",
-        inference_profile="my-bedrock-inference-profile",  # Optional
-        role_arn="arn:aws:iam::123456789012:role/BedrockAccessRole",  # Replace with your role ARN
-        session_name="ClaudeAgentDemo",
-        region="us-east-1",
-        duration_seconds=3600
-    )
-    
-    # Define system prompt
-    system_prompt = """
-    You are a helpful AI assistant that helps users with their questions.
-    Be concise, friendly, and informative in your responses.
-    """
-    
-    print("Claude Agent initialized. Type 'exit' to quit.")
-    
-    # Main interaction loop
-    while True:
-        user_input = input("\nYou: ")
-        
-        if user_input.lower() in ["exit", "quit", "bye"]:
-            print("Goodbye!")
-            break
-        
-        # Get response from Claude
-        response = agent.interact(user_input, system_prompt)
-        print(f"\nClaude: {response}")
+#addition tool
+@mcp.tool()
+def add(a: int, b: int) -> int:
+    """Add two numbers"""
+    return int(a + b)
 
+# subtraction tool
+@mcp.tool()
+def subtract(a: int, b: int) -> int:
+    """Subtract two numbers"""
+    return int(a - b)
 
-if __name__ == "__main__":
-    main()
+# multiplication tool
+@mcp.tool()
+def multiply(a: int, b: int) -> int:
+    """Multiply two numbers"""
+    return int(a * b)
+
+#  division tool
+@mcp.tool() 
+def divide(a: int, b: int) -> float:
+    """Divide two numbers"""
+    return float(a / b)
+
+# power tool
+@mcp.tool()
+def power(a: int, b: int) -> int:
+    """Power of two numbers"""
+    return int(a ** b)
+
+# square root tool
+@mcp.tool()
+def sqrt(a: int) -> float:
+    """Square root of a number"""
+    return float(a ** 0.5)
+
+# cube root tool
+@mcp.tool()
+def cbrt(a: int) -> float:
+    """Cube root of a number"""
+    return float(a ** (1/3))
+
+# factorial tool
+@mcp.tool()
+def factorial(a: int) -> int:
+    """factorial of a number"""
+    return int(math.factorial(a))
+
+# log tool
+@mcp.tool()
+def log(a: int) -> float:
+    """log of a number"""
+    return float(math.log(a))
+
+# remainder tool
+@mcp.tool()
+def remainder(a: int, b: int) -> int:
+    """remainder of two numbers divison"""
+    return int(a % b)
+
+# sin tool
+@mcp.tool()
+def sin(a: int) -> float:
+    """sin of a number"""
+    return float(math.sin(a))
+
+# cos tool
+@mcp.tool()
+def cos(a: int) -> float:
+    """cos of a number"""
+    return float(math.cos(a))
+
+# tan tool
+@mcp.tool()
+def tan(a: int) -> float:
+    """tan of a number"""
+    return float(math.tan(a))
+
+# DEFINE RESOURCES
+
+# Add a dynamic greeting resource
+@mcp.resource("greeting://{name}")
+def get_greeting(name: str) -> str:
+    """Get a personalized greeting"""
+    return f"Hello, {name}!"
+    
+ 
+ # execute and return the stdio output
+ if __name__ == "__main__":
+    mcp.run(transport="stdio")
+
