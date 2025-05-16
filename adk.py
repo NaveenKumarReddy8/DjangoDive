@@ -10,8 +10,6 @@ AZURE_CLIENT_CERTIFICATE_PATH="/path/to/your/certificate.pem" # Absolute or rela
 # AZURE_CLIENT_CERTIFICATE_PASSWORD="YOUR_PEM_PASSWORD"
 """
 
-
-
 import os
 from dotenv import load_dotenv
 from openai import AzureOpenAI
@@ -29,7 +27,7 @@ load_dotenv()
 tenant_id = os.getenv("AZURE_TENANT_ID")
 client_id = os.getenv("AZURE_CLIENT_ID")
 certificate_path = os.getenv("AZURE_CLIENT_CERTIFICATE_PATH")
-certificate_password = os.getenv("AZURE_CLIENT_CERTIFICATE_PASSWORD") # Optional
+certificate_password = os.getenv("AZURE_CLIENT_CERTIFICATE_PASSWORD")  # Optional
 
 azure_openai_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
 api_version = os.getenv("AZURE_OPENAI_API_VERSION")
@@ -43,17 +41,12 @@ try:
     # If you have a password for your PEM file, include password=certificate_password
     credential_options = {"password": certificate_password} if certificate_password else {}
     cert_credential = ClientCertificateCredential(
-        tenant_id=tenant_id,
-        client_id=client_id,
-        certificate_path=certificate_path,
-        **credential_options
+        tenant_id=tenant_id, client_id=client_id, certificate_path=certificate_path, **credential_options
     )
 
     # 2. Create the token provider for the OpenAI client
     # The scope "https://cognitiveservices.azure.com/.default" is standard for Azure OpenAI
-    token_provider = get_bearer_token_provider(
-        cert_credential, "https://cognitiveservices.azure.com/.default"
-    )
+    token_provider = get_bearer_token_provider(cert_credential, "https://cognitiveservices.azure.com/.default")
 
     # 3. Initialize the AzureOpenAI client with AAD authentication
     direct_azure_client = AzureOpenAI(
@@ -76,7 +69,7 @@ try:
 
 except Exception as e:
     print(f"Error configuring or testing direct Azure OpenAI client: {e}")
-    direct_azure_client = None # Ensure client is None if setup fails
+    direct_azure_client = None  # Ensure client is None if setup fails
 
 # --- Method 2: Integration with Google ADK via LiteLLM ---
 # ADK typically uses LiteLLM, which relies heavily on environment variables.
@@ -94,7 +87,7 @@ print(f"  AZURE_TENANT_ID: {tenant_id}")
 print(f"  AZURE_CLIENT_ID: {client_id}")
 print(f"  AZURE_CLIENT_CERTIFICATE_PATH: {certificate_path}")
 print(f"  AZURE_OPENAI_ENDPOINT: {azure_openai_endpoint}")
-print(f"  AZURE_OPENAI_API_VERSION: {api_version}") # Or OPENAI_API_VERSION might be needed by LiteLLM
+print(f"  AZURE_OPENAI_API_VERSION: {api_version}")  # Or OPENAI_API_VERSION might be needed by LiteLLM
 
 try:
     # Configure the ADK Agent to use Azure via LiteLLM
@@ -104,13 +97,13 @@ try:
             model=lite_llm_model_string,
             # You might need to explicitly pass api_version and base_url if env vars aren't picked up
             api_base=azure_openai_endpoint,
-            api_version=api_version
+            api_version=api_version,
             # LiteLLM has parameters for azure specific auth but check its docs
             # for the most up-to-date way to force certificate auth if env vars fail.
         ),
         name="my_azure_cert_agent",
         instruction="You are a helpful AI assistant running on Azure OpenAI, authenticated via client certificate.",
-        description="An agent that uses Azure OpenAI with certificate authentication."
+        description="An agent that uses Azure OpenAI with certificate authentication.",
         # Add other agent parameters as needed (tools, etc.)
     )
 
@@ -129,5 +122,7 @@ try:
 
 except Exception as e:
     print(f"Error configuring ADK LlmAgent: {e}")
-    print("Please ensure all required environment variables are set correctly and LiteLLM supports this auth flow via environment variables.")
+    print(
+        "Please ensure all required environment variables are set correctly and LiteLLM supports this auth flow via environment variables."
+    )
     print("Check LiteLLM documentation for specific Azure AD certificate authentication parameters if needed.")

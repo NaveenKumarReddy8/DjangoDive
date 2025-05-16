@@ -34,7 +34,14 @@ def post_list(request: HttpRequest):
 
 def post_detail(request: HttpRequest, year: int, month: int, day: int, post: str):
     post = get_object_or_404(klass=Post, publish__year=year, publish__month=month, publish__day=day, slug=post)
-    return render(request=request, template_name="blog/post/detail.html", context={"post": post})
+    comments = post.comments.filter(active=True)
+
+    form = CommentForm()
+    return render(
+        request=request,
+        template_name="blog/post/detail.html",
+        context={"post": post, "comments": comments, "form": form},
+    )
 
 
 def post_share(request: HttpRequest, post_id: int):
