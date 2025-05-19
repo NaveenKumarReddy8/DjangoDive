@@ -1,6 +1,13 @@
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
+from taggit.managers import TaggableManager
+
+
+class Manager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter()
+
 
 # Create your models here.
 
@@ -30,6 +37,7 @@ class Post(models.Model):
     # Model Managers
     objects = models.Manager()  # Default Manager
     published = PublishedManager()  # Custom Manager
+    tags = TaggableManager()
 
     class Meta:
         ordering = ("-publish",)

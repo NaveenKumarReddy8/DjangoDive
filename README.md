@@ -46,3 +46,20 @@ Technically, when the template system encounters a dot, it tries the following l
 * Dictionary lookup
 * Attribute or method lookup
 * Numeric index lookup
+
+
+### Django-taggit
+
+```Python
+from taggit.managers import TaggableManager
+
+class MyModel(models.Model):
+
+    # ...
+    tags = TaggableManager()  # Creates an Model manager.
+
+my_model_obj = MyModel.objects.get(id=1)
+my_model_obj.tags.add("music", "jazz", "django")  # Adds the tags
+my_model_obj.all()  # Gets all tags associated to the object.
+my_model_obj.remove("django")  # removes the tag associated to the object.
+```

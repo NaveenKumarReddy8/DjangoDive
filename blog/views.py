@@ -4,6 +4,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
+from taggit.models import Tag
 
 
 from blog.models import Post
@@ -19,8 +20,12 @@ class PostListView(ListView):
     template_name = "blog/post/list.html"
 
 
-def post_list(request: HttpRequest):
-    posts = get_list_or_404(klass=Post, status=Post.Status.PUBLISHED)
+def post_list(request: HttpRequest, tag_slug: str = None):
+    posts = Post.published.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        posts = posts.filter(tags__in=[tag])
     page = Paginator(object_list=posts, per_page=3)
     page_number = request.GET.get("page", 1)
     try:
@@ -29,7 +34,7 @@ def post_list(request: HttpRequest):
         posts = page.get_page(number=page.num_pages)
     except PageNotAnInteger:
         posts = page.get_page(number=1)
-    return render(request=request, template_name="blog/post/list.html", context={"posts": posts})
+    return render(request=request, template_name="blog/post/list.html", context={"posts": posts, "tag": tag})
 
 
 def post_detail(request: HttpRequest, year: int, month: int, day: int, post: str):
