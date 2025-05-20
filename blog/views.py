@@ -4,6 +4,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
+from django.db import models
 from taggit.models import Tag
 
 
@@ -42,10 +43,15 @@ def post_detail(request: HttpRequest, year: int, month: int, day: int, post: str
     comments = post.comments.filter(active=True)
 
     form = CommentForm()
+
+    post_tags_ids = post.tags.values_list("id", flat=True)
+    similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=models.Count("tags")).order_by("-same_tags", "-publish")[:4]
+
     return render(
         request=request,
         template_name="blog/post/detail.html",
-        context={"post": post, "comments": comments, "form": form},
+        context={"post": post, "comments": comments, "form": form, "similar_posts": similar_posts},
     )
 
 
