@@ -63,3 +63,16 @@ my_model_obj.tags.add("music", "jazz", "django")  # Adds the tags
 my_model_obj.all()  # Gets all tags associated to the object.
 my_model_obj.remove("django")  # removes the tag associated to the object.
 ```
+
+### Creating custom template tags and filters
+
+Django offers a varietry of built-in template tags, such as `{% if %}` or `{% block %}`. 
+similary Django allows you to create your own template tags to perform custom actions.
+
+Django Provides 2 helper functions, which allow you to easily create template tags.
+
+  * **simple_tag:** Processes the given data and returns a string.
+  * **inclusion_tag:** Processes the given data and returns a rendered template.
+
+Custom Template tags should be created in the Django's application /templatetags package.
+
