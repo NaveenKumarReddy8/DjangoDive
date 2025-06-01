@@ -76,3 +76,18 @@ Django Provides 2 helper functions, which allow you to easily create template ta
 
 Custom Template tags should be created in the Django's application /templatetags package.
 
+```Python
+from django import template
+
+regiser = template.Library()
+
+@register.simple_tag(name="my_tag")
+def func():
+  ...
+
+@register.inclusion_tag(filename="blog/post/latest_posts.html", name="my_inclusion_tag")
+def inc_func():
+  ...
+```
+
+
