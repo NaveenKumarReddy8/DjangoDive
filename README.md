@@ -66,7 +66,7 @@ my_model_obj.remove("django")  # removes the tag associated to the object.
 
 ### Creating custom template tags and filters
 
-Django offers a varietry of built-in template tags, such as `{% load %}` or `{% block %}`. 
+Django offers a varietry of built-in template tags, such as {% raw %}`{% load %}`{% endraw %} or {% raw %}`{% block %}`{% endraw %}. 
 similary Django allows you to create your own template tags to perform custom actions.
 
 Django Provides 2 helper functions, which allow you to easily create template tags.
