@@ -76,7 +76,7 @@ Django Provides 2 helper functions, which allow you to easily create template ta
 
 Custom Template tags should be created in the Django's application /templatetags package.
 
-```Python
+```python
 from django import template
 
 regiser = template.Library()
