@@ -6,12 +6,12 @@
 
 This is how Django handles HTTP requests and generates responses:
 
-1) A web browser requests a page by its URL and the web server passes the HTTP request to Django.
-2) Django runs through its configured URL patterns and stops at the first one that matches the requested URL.
-3) Django executes the view that corresponds to the matched URL pattern.
-4) The view potentially uses data models to retrieve information from the database.
-5) Data models provide data definitions and behaviors. They are used to query the database.
-6) The view renders a template (usually HTML) to display the data and returns it with an HTTP response.
+1. A web browser requests a page by its URL and the web server passes the HTTP request to Django.
+2. Django runs through its configured URL patterns and stops at the first one that matches the requested URL.
+3. Django executes the view that corresponds to the matched URL pattern.
+4. The view potentially uses data models to retrieve information from the database.
+5. Data models provide data definitions and behaviors. They are used to query the database.
+6. The view renders a template (usually HTML) to display the data and returns it with an HTTP response.
 
 ### Django Project Layout
 
