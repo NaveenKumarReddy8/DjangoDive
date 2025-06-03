@@ -23,7 +23,7 @@ This is how Django handles HTTP requests and generates responses:
     * urls.py: This is the place where your URL patterns live. Each URL defined here is mapped to a view.
     * wsgi.py: This is the configuration to run your project as a Web Server Gateway Interface (WSGI) application with WSGI-compatible web servers.
 
-### When QuerySets are evaluated
+## When QuerySets are evaluated
 
 Creating a QuerySet doesn’t involve any database activity until it is evaluated. QuerySets will usually
 return another unevaluated QuerySet. You can concatenate as many filters as you like to a QuerySet,
@@ -39,7 +39,7 @@ QuerySets are only evaluated in the following cases:
 * When you explicitly call list() on them
 * When you test them in a statement, such as bool(), or, and, or if
 
-### Django template dot notation lookup
+## Django template dot notation lookup
 
 Technically, when the template system encounters a dot, it tries the following lookups, in this order:
 
@@ -48,7 +48,7 @@ Technically, when the template system encounters a dot, it tries the following l
 * Numeric index lookup
 
 
-### Django-taggit
+## Django-taggit
 
 ```python
 from taggit.managers import TaggableManager
@@ -64,7 +64,7 @@ my_model_obj.all()  # Gets all tags associated to the object.
 my_model_obj.remove("django")  # removes the tag associated to the object.
 ```
 
-### Creating custom template tags and filters
+## Creating custom template tags and filters
 
 Django offers a varietry of built-in template tags, such as {% raw %}`{% load %}`{% endraw %} or {% raw %}`{% block %}`{% endraw %}. 
 similary Django allows you to create your own template tags to perform custom actions.
