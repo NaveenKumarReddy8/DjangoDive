@@ -5,6 +5,7 @@
 
 
 This is how Django handles HTTP requests and generates responses:
+
 1) A web browser requests a page by its URL and the web server passes the HTTP request to Django.
 2) Django runs through its configured URL patterns and stops at the first one that matches the requested URL.
 3) Django executes the view that corresponds to the matched URL pattern.
