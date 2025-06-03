@@ -13,7 +13,7 @@ register = template.Library()
 
 
 @register.simple_tag
-def total_posts():
+def total_posts() -> int:
     return Post.objects.count()
 
 
@@ -23,6 +23,7 @@ def show_latest_posts(count: int = 5):
     return {"latest_posts": latest_posts}
 
 
+# Simple tag that returns an QuerySet.
 @register.simple_tag
 def get_most_commented_posts(count: int = 5):
     return Post.published.annotate(total_comments=Count("comments")).order_by("-total_comments")[:count]
