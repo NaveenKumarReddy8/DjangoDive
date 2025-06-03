@@ -50,7 +50,7 @@ Technically, when the template system encounters a dot, it tries the following l
 
 ### Django-taggit
 
-```Python
+```python
 from taggit.managers import TaggableManager
 
 class MyModel(models.Model):
