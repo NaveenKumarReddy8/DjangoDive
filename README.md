@@ -91,4 +91,12 @@ def inc_func():
   ...
 ```
 
+### Implementing Custom Filters
+
+Django has a variety of built-in template filters that allow you to alter variables in templates.
+There are Python functions that take one or more parameters, the value of the variable that the filter is applied to, and an optional argument. They return a value that can be displayed or treated by another filter.
+
+### Adding Sitemaps to the Site
+
+
 
