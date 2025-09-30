@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login
 from account.forms import LoginForm
 # Create your views here.
 
+
 def login(request: HttpRequest):
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -21,11 +22,4 @@ def login(request: HttpRequest):
                 return HttpResponse("Invalid login")
     else:
         form = LoginForm()
-    return render(
-        request=request,
-        template_name="account/login.html",
-        context={"form": form},
-        content_type="text/html"
-    )
-        
-
+    return render(request=request, template_name="account/login.html", context={"form": form}, content_type="text/html")
