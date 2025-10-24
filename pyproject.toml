@@ -11,5 +11,12 @@ dependencies = [
 [dependency-groups]
 dev = [
     "djlint>=1.36.4",
+    "pyrefly>=0.38.2",
     "ruff>=0.14.2",
 ]
+
+[ruff.lint]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["I"]
