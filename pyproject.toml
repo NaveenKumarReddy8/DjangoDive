@@ -1,31 +1,15 @@
 [project]
-name = "django-dive"
+name = "djangodive"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 dependencies = [
-    "django>=5.1.6",
-    "django-taggit>=6.1.0",
-    "markdown>=3.8",
+    "django>=5.2.7",
 ]
 
 [dependency-groups]
 dev = [
     "djlint>=1.36.4",
-    "ipython>=9.0.1",
-    "ruff>=0.9.9",
+    "ruff>=0.14.2",
 ]
-
-[tool.ruff]
-indent-width = 4
-line-length = 120
-target-version = "py313"
-
-[tool.ruff.lint]
-extend-select = [
-    "I"
-]
-
-[tool.djlint]
-profile="django"
