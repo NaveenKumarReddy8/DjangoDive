@@ -61,6 +61,21 @@ wheels = [
 ]
 
 [[package]]
+name = "django-language-server"
+version = "5.2.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/7a/ed/d306bed4c2b2b6aafddc7c4aa3da8f7aec8dc7ecf4fe341fa734bd6a5b78/django_language_server-5.2.3.tar.gz", hash = "sha256:721336909731c7cf3812a7e7481ac2b7225c601fcaf7d163b8662242705c7172", size = 122100, upload-time = "2025-10-07T22:30:18.623Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fa/8e/9089662da412bc1b53f71437d63b8eea93addcceef607d05680ccb2d56b3/django_language_server-5.2.3-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:0b06e6bb7307eed909e7b121d6405671b53f6fff1508fb1ca140c02d94b79bd8", size = 2913559, upload-time = "2025-10-07T22:30:14.917Z" },
+    { url = "https://files.pythonhosted.org/packages/4f/79/7b7cc2d62e70c594cd6919ca80d628b24714617dd81fa7c7b04749272b64/django_language_server-5.2.3-py3-none-macosx_11_0_arm64.whl", hash = "sha256:13ba30cd99109ff352551318a248dab75e6b76131e55160d64bec4a5eab86c0e", size = 2759749, upload-time = "2025-10-07T22:30:13.567Z" },
+    { url = "https://files.pythonhosted.org/packages/63/0f/7e821bc97e1500777f167a8eb5c3326bcbf3e3a5f8dd1832e06a1c4c5bf1/django_language_server-5.2.3-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:02f969a4964a0bc99afd051b176add796eb3be3b547a2dbffeae91a0272aa572", size = 2766272, upload-time = "2025-10-07T22:30:09.927Z" },
+    { url = "https://files.pythonhosted.org/packages/45/2f/f4e10a6481b3da411b838382d0443407caa3d1b39f18ac804c2eac3bbafb/django_language_server-5.2.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d8178c18879c87c50e2cc550c7088789538e2f04366eea47672e498442291fc9", size = 2981270, upload-time = "2025-10-07T22:30:11.985Z" },
+    { url = "https://files.pythonhosted.org/packages/0d/47/99a65e3dfd3e7e71969b3370d6ed1f8b4f04bc178ce26cd25049f2a4b570/django_language_server-5.2.3-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:9df3bc2cee6ebb0ed8cb8471d408ff293a55edb45e7b224f131171ae08808ff4", size = 2761949, upload-time = "2025-10-07T22:30:16.155Z" },
+    { url = "https://files.pythonhosted.org/packages/60/47/272962477b6332a0729192e2749538ef47ec91a0b15379ab42722b7fa2b6/django_language_server-5.2.3-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:bf683e6930b26dac6c972ee767631d92b7825293b39d585b1180541b774f923f", size = 3037431, upload-time = "2025-10-07T22:30:17.324Z" },
+    { url = "https://files.pythonhosted.org/packages/b7/44/a18a80dc9ce5c80b7a12102c1e6f1d122013912112d4beb301b5a7f76411/django_language_server-5.2.3-py3-none-win_amd64.whl", hash = "sha256:5d83a8e418bb47fc8a5df873732518f4119c9bd321597b11e4245e8fd3db0c8c", size = 2868572, upload-time = "2025-10-07T22:30:19.416Z" },
+]
+
+[[package]]
 name = "djangodive"
 version = "0.1.0"
 source = { virtual = "." }
@@ -70,6 +85,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "django-language-server" },
     { name = "djlint" },
     { name = "pyrefly" },
     { name = "ruff" },
@@ -80,6 +96,7 @@ requires-dist = [{ name = "django", specifier = ">=5.2.7" }]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "django-language-server", specifier = ">=5.2.3" },
     { name = "djlint", specifier = ">=1.36.4" },
     { name = "pyrefly", specifier = ">=0.38.2" },
     { name = "ruff", specifier = ">=0.14.2" },
