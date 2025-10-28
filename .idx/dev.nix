@@ -14,7 +14,6 @@
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
       "ms-python.python"
-      "batisteo.vscode-django"
       "ms-python.debugpy"
       "damms005.devdb"
     ];
