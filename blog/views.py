@@ -40,10 +40,12 @@ def post_detail(
         slug=post,
         status=Post.Status.PUBLISHED,
     )
+    comments = post.comments.filter(active=True)
+    form = CommentForm()
     return render(
         request=request,
         template_name="blog/post/detail.html",
-        context={"post": post},
+        context={"post": post, "comments": comments, "form": form},
     )
 
 
