@@ -9,6 +9,7 @@
     pkgs.gnumake
   ];
   # Sets environment variables in the workspace
+  services.docker.enable = true;
   env = {};
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
