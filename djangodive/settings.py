@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 CSRF_TRUSTED_ORIGINS = ["https://*.cloudworkstations.dev"]
 
-
+SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.sites",
+    "django.contrib.sitemaps",
     "django.contrib.staticfiles",
     "taggit",
     "blog.apps.BlogConfig",
@@ -127,3 +129,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # SMTP
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
