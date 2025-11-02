@@ -26,6 +26,7 @@ SECRET_KEY = "django-insecure-c=k73!qoa#)bk5r*@9dox0(4h5hs!8f(lb)%csueej!#(m8b0r
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = ["https://*.cloudworkstations.dev"]
 
 
 # Application definition
@@ -121,3 +122,8 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+LOGIN_REDIRECT_URL = "dashboard"
+LOGIN_URL = "login"
+LOGOUT = "logout"
