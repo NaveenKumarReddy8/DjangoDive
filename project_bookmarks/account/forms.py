@@ -9,7 +9,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 
-class UserRegistrationForm(forms.Form):
+class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
     password2 = forms.CharField(label="Repeat password", widget=forms.PasswordInput)
 
@@ -23,11 +23,25 @@ class UserRegistrationForm(forms.Form):
             raise forms.ValidationError("Passwords don't match")
         return cd["password2"]
 
+    def clean_email(self):
+        user_model = get_user_model()
+        data = self.cleaned_data
+        if user_model.objects.filter(email=data["email"]).exists():
+            raise forms.ValidationError("Email already exists")
+        return data
+
 
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ["first_name", "last_name", "email"]
+
+    def clean_email(self):
+        data = self.cleaned_data["email"]
+        user_model = get_user_model()
+        if user_model.objects.filter(email=data).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError("Email already exists")
+        return data
 
 
 class ProfileEditForm(forms.ModelForm):

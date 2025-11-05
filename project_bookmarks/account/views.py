@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import login, authenticate
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from account.forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
 from account.models import Profile
@@ -34,11 +35,11 @@ def user_login(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
-def dashboard(request):
+def dashboard(request) -> HttpResponse:
     return render(request, "account/dashboard.html", {"section": "dashboard"})
 
 
-def register(request: HttpRequest):
+def register(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         user_form = UserRegistrationForm(request.POST)
         if user_form.is_valid():
@@ -61,7 +62,7 @@ def register(request: HttpRequest):
 
 
 @login_required
-def edit(request: HttpRequest):
+def edit(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         user_form = UserEditForm(
             instance=request.user,
@@ -75,6 +76,9 @@ def edit(request: HttpRequest):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+            messages.success(request=request, message="Profile updated successfully.")
+        else:
+            messages.error(request=request, message="Error updating your profile.")
     else:
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
