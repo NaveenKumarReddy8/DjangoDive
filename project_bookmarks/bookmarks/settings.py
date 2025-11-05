@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-c=k73!qoa#)bk5r*@9dox0(4h5hs!8f(lb)%csueej!#(m8b0r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["8000-firebase-djangodive-1762096411753.cluster-73qgvk7hjjadkrjeyexca5ivva.cloudworkstations.dev", "localhost", "127.0.0.1"]
 CSRF_TRUSTED_ORIGINS = ["https://*.cloudworkstations.dev"]
 
 
@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "social_django",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
