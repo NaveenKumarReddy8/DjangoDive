@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.backends import BaseBackend
 from django.http import HttpRequest
 
+from account.models import Profile
+
 
 class EmailAuthBackend(BaseBackend):
     def authenticate(
@@ -23,3 +25,10 @@ class EmailAuthBackend(BaseBackend):
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
+
+
+def create_profile(backend, user, *args, **kwargs):
+    """
+    Create user profile for social authentication
+    """
+    Profile.objects.get_or_create(user=user)
