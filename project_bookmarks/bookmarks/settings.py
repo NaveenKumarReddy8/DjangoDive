@@ -27,7 +27,11 @@ SECRET_KEY = "django-insecure-c=k73!qoa#)bk5r*@9dox0(4h5hs!8f(lb)%csueej!#(m8b0r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["8000-firebase-djangodive-1762096411753.cluster-73qgvk7hjjadkrjeyexca5ivva.cloudworkstations.dev", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "8000-firebase-djangodive-1762096411753.cluster-73qgvk7hjjadkrjeyexca5ivva.cloudworkstations.dev",
+    "localhost",
+    "127.0.0.1",
+]
 CSRF_TRUSTED_ORIGINS = ["https://*.cloudworkstations.dev"]
 
 
@@ -138,13 +142,13 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "account.authentication.EmailAuthBackend",
-    "social_core.backends.googleGoogleOAuth2",
+    "social_core.backends.google.GoogleOAuth2",
 ]
 
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("GOOGLE_OAUTH2_KEY")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("GOOGLE_OAUTH2_SECRET")
+SOCIAL_AUTH_RAISE_EXCEPTIONS = False
