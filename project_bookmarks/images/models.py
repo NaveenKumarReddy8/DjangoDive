@@ -1,7 +1,7 @@
+from django.conf import settings
+from django.db import models
 from django.db.models.fields import CharField
 from django.forms.fields import CharField
-from django.db import models
-from django.conf import settings
 from django.utils.text import slugify
 
 # Create your models here.
