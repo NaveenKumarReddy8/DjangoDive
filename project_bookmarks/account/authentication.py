@@ -1,5 +1,5 @@
-from django.contrib.auth.models import User
 from django.contrib.auth.backends import BaseBackend
+from django.contrib.auth.models import User
 from django.http import HttpRequest
 
 from account.models import Profile

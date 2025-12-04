@@ -1,12 +1,11 @@
-from django.shortcuts import render
-from django.contrib.auth import login, authenticate
-from django.http import HttpRequest, HttpResponse
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
 
-from account.forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
+from account.forms import LoginForm, ProfileEditForm, UserEditForm, UserRegistrationForm
 from account.models import Profile
-
 
 # Create your views here.
 

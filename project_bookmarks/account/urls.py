@@ -1,17 +1,16 @@
-from django.urls import path, include
 from django.contrib.auth.views import (
     LoginView,
     LogoutView,
-    PasswordChangeView,
     PasswordChangeDoneView,
-    PasswordResetView,
-    PasswordResetDoneView,
-    PasswordResetConfirmView,
+    PasswordChangeView,
     PasswordResetCompleteView,
+    PasswordResetConfirmView,
+    PasswordResetDoneView,
+    PasswordResetView,
 )
+from django.urls import include, path
 
-from account.views import user_login, dashboard, register, edit
-
+from account.views import dashboard, edit, register, user_login
 
 urlpatterns = [
     path("", dashboard, name="dashboard"),
